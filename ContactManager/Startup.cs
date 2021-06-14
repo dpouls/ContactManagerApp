@@ -1,3 +1,4 @@
+using ContactManager.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContactManager
 {
@@ -23,7 +25,16 @@ namespace ContactManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddRouting(options =>
+            {
+                //allows for lowercase URLs
+                options.LowercaseUrls = true;
+                //appends a trailing slash to the URL
+                options.AppendTrailingSlash = true;
+            });
             services.AddControllersWithViews();
+            
+            services.AddDbContext<ContactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ContactContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
